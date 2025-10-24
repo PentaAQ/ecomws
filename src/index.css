@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import '@fontsource-variable/open-sans';
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 80px;
+  margin-top: 40px;
+}
+
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+    preferredStrategy: 'pseudoelements';
+}
+@theme{
+    --font-family-sans: 'Open Sans Variable', sans-serif;
+}
