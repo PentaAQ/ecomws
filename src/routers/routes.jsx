@@ -8,14 +8,7 @@ export function MyRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <RouteProtecter authenticate={false}>
-              <HomePage />
-            </RouteProtecter>
-          }
-        />
+        <Route path="/" element={<HomePage />} />
         <Route
           path="/login"
           element={

@@ -1,19 +1,42 @@
 @import "tailwindcss";
-@import '@fontsource-variable/open-sans';
+@import "@fontsource-variable/open-sans";
+@import '@fontsource/anton';
 
 html {
   scroll-behavior: smooth;
 }
 
 section[id] {
-  scroll-margin-top: 80px;
-  margin-top: 40px;
+  scroll-margin-top: 20px;
+
 }
 
 @plugin 'tailwind-scrollbar' {
-    nocompatible: true;
-    preferredStrategy: 'pseudoelements';
+  nocompatible: true;
+  preferredstrategy: "pseudoelements";
 }
-@theme{
-    --font-family-sans: 'Open Sans Variable', sans-serif;
+@theme {
+  --font-family-sans: "Open Sans Variable", sans-serif;
+  --font-Anton: 'Anton', sans-serif;;
+}
+
+@layer utilities {
+  @keyframes gradient {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+.word-spacing-title-hero{
+  word-spacing: 1rem;
 }
