@@ -23,9 +23,33 @@ export const useAuthStore = create((set) => ({
   },
   
   cerrarSesion: async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-  },
+  try {
+    // Primero verifica si hay una sesión activa
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      // Si no hay sesión, simplemente limpia el estado local
+      set({ credenciales: null });
+      return;
+    }
+    
+    // Intenta cerrar sesión
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    
+    if (error && error.message !== 'Auth session missing!') {
+      throw error;
+    }
+    
+    // Limpia el estado local de todos modos
+    set({ credenciales: null });
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+    // Limpia el estado local incluso si hay error
+    set({ credenciales: null });
+    // Limpia manualmente el localStorage si es necesario
+    localStorage.removeItem('supabase.auth.token');
+  }
+},
 }));
 
 export const useSubcription = create((set) => {
