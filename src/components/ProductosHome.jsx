@@ -3,19 +3,21 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMostrarProductosQuery } from "../stacks/ProductosStack";
 import { useCarritoStore } from "../stores/CarritoStore";
 import { Icon } from "@iconify/react";
-import { toast } from "sonner";
+
 
 export const ProductosHome = () => {
   const { data: productos } = useMostrarProductosQuery();
-  const { agregarAlCarrito, abrirCarrito } = useCarritoStore();
+  const {agregarAlCarrito } = useCarritoStore();
+  
+  
+  const handleAgregarCarrito = (producto) => {
+    agregarAlCarrito(producto);
+    
+  };
 
   // Estado para la paginación
   const [paginaActual, setPaginaActual] = useState(1);
   const productosPorPagina = 9;
-
-  // Estado para feedback visual
-  const [productosAgregados, setProductosAgregados] = useState(new Set());
-
   // Calcular productos a mostrar
   const { productosPaginados, totalPaginas } = useMemo(() => {
     if (!productos) return { productosPaginados: [], totalPaginas: 0 };
@@ -29,67 +31,7 @@ export const ProductosHome = () => {
     };
   }, [productos, paginaActual]);
 
-  // Función mejorada para agregar al carrito
-  const handleAgregarCarrito = (producto) => {
-    try {
-      console.log("🛒 Iniciando agregar al carrito:", producto);
-
-      // Validar datos del producto
-      if (!producto) {
-        toast.error("Error: Producto no válido");
-        return;
-      }
-
-      if (!producto.id) {
-        toast.error("Error: Producto sin ID");
-        return;
-      }
-
-      if (!producto.precio_unidad || isNaN(Number(producto.precio_unidad))) {
-        toast.error(`Error: Precio inválido (${producto.precio_unidad})`);
-        console.error("Producto con precio inválido:", producto);
-        return;
-      }
-
-      // Intentar agregar al carrito
-      const resultado = agregarAlCarrito(producto);
-
-      console.log("📊 Resultado:", resultado);
-
-      // Verificar si fue exitoso
-      if (resultado && resultado.success === false) {
-        toast.error(`Error: ${resultado.message || "No se pudo agregar"}`);
-        return;
-      }
-
-      // Feedback visual exitoso
-      setProductosAgregados((prev) => new Set(prev).add(producto.id));
-      
-      toast.success(`${producto.nombre} agregado al carrito`, {
-        duration: 2000,
-        icon: "🛒",
-      });
-
-      // Abrir carrito después de un pequeño delay
-      setTimeout(() => {
-        abrirCarrito();
-      }, 300);
-
-      // Remover feedback después de 2 segundos
-      setTimeout(() => {
-        setProductosAgregados((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(producto.id);
-          return newSet;
-        });
-      }, 2000);
-    } catch (error) {
-      console.error("❌ Error crítico al agregar al carrito:", error);
-      toast.error("Error inesperado al agregar producto");
-    }
-  };
-
-  // Funciones de navegación (sin cambios)
+  // Funciones de navegación
   const irAPagina = (numeroPagina) => {
     setPaginaActual(numeroPagina);
     document
@@ -141,22 +83,6 @@ export const ProductosHome = () => {
     return paginas;
   };
 
-  if (!productos || productos.length === 0) {
-    return (
-      <section
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
-        id="productos"
-      >
-        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-black">
-          Nuestros Productos
-        </h1>
-        <p className="text-center text-gray-500">
-          No hay productos disponibles
-        </p>
-      </section>
-    );
-  }
-
   return (
     <section
       className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
@@ -169,11 +95,9 @@ export const ProductosHome = () => {
       {/* Grid de productos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
         {productosPaginados.map((item) => {
-          const estaAgregado = productosAgregados.has(item.id);
-          
           return (
             <div
-              key={item.id}
+              key={item.nombre}
               className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 h-110 max-sm:h-100 hover:-translate-y-1 flex flex-col"
             >
               <div className="relative h-48 sm:h-56 bg-gray-50 overflow-hidden flex items-center justify-center">
@@ -183,9 +107,6 @@ export const ProductosHome = () => {
                   height={100}
                   className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500 ease-out"
                   alt={item.nombre}
-                  onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/300?text=Sin+Imagen";
-                  }}
                 />
               </div>
 
@@ -203,26 +124,11 @@ export const ProductosHome = () => {
                     S/{Number(item.precio_unidad).toFixed(2)}
                   </p>
                   <button
-                    className={`text-white w-fit px-2 py-3 cursor-pointer transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg font-semibold flex gap-2 rounded-lg ${
-                      estaAgregado
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-black hover:bg-gray-800"
-                    }`}
+                    className={`text-white w-fit px-2 py-3 cursor-pointer transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg font-semibold flex gap-2 rounded-lg bg-black hover:bg-gray-800`}
                     onClick={() => handleAgregarCarrito(item)}
-                    disabled={estaAgregado}
                   >
-                    <Icon
-                      icon={
-                        estaAgregado
-                          ? "mdi:check-circle"
-                          : "mynaui:cart-plus-solid"
-                      }
-                      width="24"
-                      height="24"
-                    />
-                    <span className="max-sm:hidden">
-                      {estaAgregado ? "¡Agregado!" : "Añadir"}
-                    </span>
+                    <Icon icon={"mdi:check-circle"} width="24" height="24" />
+                    <span className="max-sm:hidden">{"Añadir"}</span>
                   </button>
                 </div>
               </div>

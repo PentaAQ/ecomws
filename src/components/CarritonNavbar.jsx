@@ -1,49 +1,36 @@
 import { Icon } from "@iconify/react";
 import { useCarritoStore } from "../stores/CarritoStore";
+import { useCalcularTotal } from "../hooks/useCalcularTotal";
 
 const WHATSAPP_NUMBER = "51906047287";
 
 export const CarritonNavbar = () => {
-  const {
-    carrito,
-    stateCarrito,
-    cerrarCarrito,
-    eliminarDelCarrito,
-    aumentarCantidad,
-    disminuirCantidad,
-    calcularTotal,
-    vaciarCarrito,
-  } = useCarritoStore();
-
-  const total = calcularTotal();
-
+  const { carrito, stateCarrito, cerrarCarrito, vaciarCarrito } =
+    useCarritoStore();
+  const { totalAPagar } = useCalcularTotal();
   const handleWhatsAppCheckout = () => {
-    if (carrito.length === 0) return;
-
     const message = carrito
       .map((item) => {
         const precio = Number(item.precio_unidad) || 0;
         const cantidad = Number(item.cantidad) || 0;
         const subtotal = precio * cantidad;
 
-        return `• ${item.nombre}%0A  Cantidad: ${cantidad}%0A  Precio: S/${precio.toFixed(
+        return `• ${
+          item.nombre
+        }%0A  Cantidad: ${cantidad}%0A  Precio: S/${precio.toFixed(
           2
         )}%0A  Subtotal: S/${subtotal.toFixed(2)}`;
       })
       .join("%0A%0A");
 
-    const totalMessage = `*TOTAL: S/${total.toFixed(2)}*`;
-    const header = `*🛒 NUEVO PEDIDO*%0A%0A`;
+    const totalMessage = `*TOTAL: S/${totalAPagar}*`;
+    const header = `Vendeme`;
     const fullMessage = `${header}${message}%0A%0A${totalMessage}`;
 
     window.open(
       `https://wa.me/${WHATSAPP_NUMBER}?text=${fullMessage}`,
       "_blank"
     );
-
-    // Opcional: Vaciar carrito después de enviar
-    // vaciarCarrito();
-    // cerrarCarrito();
   };
 
   return (
@@ -89,10 +76,6 @@ export const CarritonNavbar = () => {
           ) : (
             <div className="space-y-3">
               {carrito.map((item) => {
-                const precio = Number(item.precio_unidad) || 0;
-                const cantidad = Number(item.cantidad) || 0;
-                const subtotal = precio * cantidad;
-
                 return (
                   <div
                     key={item.id}
@@ -115,32 +98,20 @@ export const CarritonNavbar = () => {
                           {item.nombre}
                         </h3>
                         <p className="text-xs text-neutral-500 mt-1">
-                          S/{precio.toFixed(2)} c/u
+                          S/{item.precio_unidad} c/u
                         </p>
                       </div>
 
                       {/* Controles de cantidad */}
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-2 bg-white rounded-lg border border-neutral-300 px-2 py-1">
-                          <button
-                            onClick={() => disminuirCantidad(item.id)}
-                            className="w-6 h-6 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
-                          >
-                            <Icon icon="ic:round-minus" width="16" height="16" />
-                          </button>
                           <span className="text-sm font-semibold min-w-[24px] text-center">
-                            {cantidad}
+                            {item.cantidad}
                           </span>
-                          <button
-                            onClick={() => aumentarCantidad(item.id)}
-                            className="w-6 h-6 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
-                          >
-                            <Icon icon="ic:round-plus" width="16" height="16" />
-                          </button>
                         </div>
-
-                        <span className="font-bold text-sm">
-                          S/{subtotal.toFixed(2)}
+                        <span className="text-sm font-semibold min-w-[24px] text-center flex gap-2">
+                          <p>SubTotal:</p>
+                          {item.subTotal}
                         </span>
                       </div>
                     </div>
@@ -181,7 +152,7 @@ export const CarritonNavbar = () => {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Subtotal</span>
-                <span className="font-medium">S/{total.toFixed(2)}</span>
+                <span className="font-medium">S/{10}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-600">Envío</span>
@@ -190,9 +161,7 @@ export const CarritonNavbar = () => {
               <div className="h-px bg-neutral-200 my-2" />
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold">Total</span>
-                <span className="text-2xl font-bold text-black">
-                  S/{total.toFixed(2)}
-                </span>
+                <span className="text-2xl font-bold text-black">S/{totalAPagar}</span>
               </div>
             </div>
 

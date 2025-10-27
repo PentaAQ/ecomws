@@ -1,12 +1,10 @@
 import { Icon } from "@iconify/react";
 import { useCarritoStore } from "../stores/CarritoStore";
+import { useCantidadCarrito } from "../hooks/useCantidadCarrito";
 
 export const HeaderHome = () => {
-  const { carrito, setStateCarrito } = useCarritoStore();
-  const cantidadTotal = carrito.reduce(
-    (total, item) => total + item.cantidad,
-    0
-  );
+  const { abrirCarrito } = useCarritoStore();
+  const {cantidad} = useCantidadCarrito()
 
   return (
     <header className="fixed w-full top-0 z-50 bg-gradient-to-b from-black/30 to-transparent backdrop-blur-md shadow-lg border-b border-white/10">
@@ -20,7 +18,7 @@ export const HeaderHome = () => {
           Stride
         </a>
         <button
-          onClick={setStateCarrito}
+          onClick={abrirCarrito}
           className="relative p-2 hover:bg-white/20 rounded-lg transition-colors duration-200"
           aria-label="Abrir carrito"
         >
@@ -31,9 +29,9 @@ export const HeaderHome = () => {
             className="text-white"
             style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }}
           />
-          {cantidadTotal > 0 && (
+          {cantidad > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse shadow-lg">
-              {cantidadTotal}
+              {cantidad}
             </span>
           )}
         </button>
