@@ -5,5 +5,6 @@ export const useCalcularTotal = ()=>{
   const totalAPagar = carrito.reduce((total,item)=>{
     return total+item.subTotal
   },0)
+  
   return{totalAPagar}
 }

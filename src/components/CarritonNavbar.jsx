@@ -5,9 +5,17 @@ import { useCalcularTotal } from "../hooks/useCalcularTotal";
 const WHATSAPP_NUMBER = "51906047287";
 
 export const CarritonNavbar = () => {
-  const { carrito, stateCarrito, cerrarCarrito, vaciarCarrito } =
-    useCarritoStore();
+  const {
+    carrito,
+    stateCarrito,
+    cerrarCarrito,
+    vaciarCarrito,
+    borrarProducto,
+    aumentarCantidad,
+    disminuirCantidad,
+  } = useCarritoStore();
   const { totalAPagar } = useCalcularTotal();
+
   const handleWhatsAppCheckout = () => {
     const message = carrito
       .map((item) => {
@@ -38,7 +46,7 @@ export const CarritonNavbar = () => {
       {/* Overlay oscuro */}
       {stateCarrito && (
         <div
-          className="fixed inset-0 bg-transparent bg-opacity-50 z-40 transition-opacity duration-300"
+          className="fixed inset-0 backdrop-blur-sm bg-opacity-50 z-40 transition-opacity duration-300"
           onClick={cerrarCarrito}
         />
       )}
@@ -54,7 +62,7 @@ export const CarritonNavbar = () => {
           <div>
             <h1 className="font-bold text-2xl">Tu Carrito</h1>
             <p className="text-sm text-neutral-500">
-              {carrito.length} {carrito.length === 1 ? "producto" : "productos"}
+              {carrito.length} {carrito.length <= 1 ? "producto" : "productos"}
             </p>
           </div>
           <button
@@ -75,7 +83,7 @@ export const CarritonNavbar = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {carrito.map((item) => {
+              {carrito?.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -86,9 +94,6 @@ export const CarritonNavbar = () => {
                       src={item.imagen}
                       alt={item.nombre}
                       className="w-20 h-20 object-cover rounded-lg border border-neutral-200"
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/80";
-                      }}
                     />
 
                     {/* Info del producto */}
@@ -104,21 +109,33 @@ export const CarritonNavbar = () => {
 
                       {/* Controles de cantidad */}
                       <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-2 bg-white rounded-lg border border-neutral-300 px-2 py-1">
+                        <div className="flex items-center gap-2 bg-white rounded-lg overflow-hidden border border-neutral-300">
+                          <span
+                            className="text-sm font-semibold min-w-[24px] text-center cursor-pointer bg-gray-300 hover:bg-gray-200 py-1 px-2"
+                            onClick={() => disminuirCantidad(item.id)}
+                          >
+                            -1
+                          </span>
                           <span className="text-sm font-semibold min-w-[24px] text-center">
                             {item.cantidad}
+                          </span>
+                          <span
+                            className="text-sm font-semibold min-w-[24px] text-center cursor-pointer bg-gray-300 hover:bg-gray-200 py-1 px-2"
+                            onClick={() => aumentarCantidad(item.id)}
+                          >
+                            +1
                           </span>
                         </div>
                         <span className="text-sm font-semibold min-w-[24px] text-center flex gap-2">
                           <p>SubTotal:</p>
-                          {item.subTotal}
+                          {item.subTotal.toFixed(2)}
                         </span>
                       </div>
                     </div>
 
                     {/* Botón eliminar */}
                     <button
-                      onClick={() => eliminarDelCarrito(item.id)}
+                      onClick={() => borrarProducto(item.id)}
                       className="self-start p-2 hover:bg-red-50 rounded-lg transition-colors group"
                     >
                       <Icon
@@ -148,24 +165,15 @@ export const CarritonNavbar = () => {
         {/* Footer con total y botón de checkout */}
         {carrito.length > 0 && (
           <div className="border-t border-neutral-200 bg-neutral-50 p-5">
-            {/* Resumen del total */}
             <div className="space-y-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-neutral-600">Subtotal</span>
-                <span className="font-medium">S/{10}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-neutral-600">Envío</span>
-                <span className="font-medium text-green-600">A calcular</span>
-              </div>
-              <div className="h-px bg-neutral-200 my-2" />
               <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">Total</span>
-                <span className="text-2xl font-bold text-black">S/{totalAPagar}</span>
+                <span className="text-2xl font-bold">Total: </span>
+                <span className="text-2xl font-bold text-black">
+                  S/{totalAPagar.toFixed(2)}
+                </span>
               </div>
             </div>
 
-            {/* Botón de WhatsApp */}
             <button
               onClick={handleWhatsAppCheckout}
               className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"

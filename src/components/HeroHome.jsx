@@ -14,7 +14,7 @@ export const HeroHome = () => {
       <div className="absolute w-full h-full bottom-0 max-sm:-mb-10 mx-auto">
         <img
           src="/heroImg-artguru.png"
-          alt=""
+          alt="Imagen Hero"
           className="w-full h-full object-cover "
         />
       </div>
