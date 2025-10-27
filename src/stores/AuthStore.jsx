@@ -12,7 +12,7 @@ export const useAuthStore = create((set) => ({
     });
     
     if (error) {
-      throw error; // Lanzar el objeto error completo de Supabase
+      throw error;
     }
     
     if (!data.user) {
@@ -23,33 +23,27 @@ export const useAuthStore = create((set) => ({
   },
   
   cerrarSesion: async () => {
-  try {
-    // Primero verifica si hay una sesión activa
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      // Si no hay sesión, simplemente limpia el estado local
+    try {
+      // Usa scope: 'local' para evitar el error de sesión faltante
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      
+      // Solo lanza el error si NO es "Auth session missing"
+      if (error && !error.message.includes('Auth session missing')) {
+        throw error;
+      }
+    } catch (error) {
+      // Si el error no es "Auth session missing", lo lanzamos
+      if (!error.message?.includes('Auth session missing')) {
+        console.error('Error al cerrar sesión:', error);
+        throw error;
+      }
+      // Si es "Auth session missing", lo ignoramos y continuamos
+      console.log('Sesión ya cerrada o no existe');
+    } finally {
+      // Limpia el estado local siempre, independientemente del resultado
       set({ credenciales: null });
-      return;
     }
-    
-    // Intenta cerrar sesión
-    const { error } = await supabase.auth.signOut({ scope: 'local' });
-    
-    if (error && error.message !== 'Auth session missing!') {
-      throw error;
-    }
-    
-    // Limpia el estado local de todos modos
-    set({ credenciales: null });
-  } catch (error) {
-    console.error('Error al cerrar sesión:', error);
-    // Limpia el estado local incluso si hay error
-    set({ credenciales: null });
-    // Limpia manualmente el localStorage si es necesario
-    localStorage.removeItem('supabase.auth.token');
-  }
-},
+  },
 }));
 
 export const useSubcription = create((set) => {
