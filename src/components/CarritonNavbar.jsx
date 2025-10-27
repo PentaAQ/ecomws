@@ -1,129 +1,216 @@
 import { Icon } from "@iconify/react";
 import { useCarritoStore } from "../stores/CarritoStore";
+
 const WHATSAPP_NUMBER = "51906047287";
 
 export const CarritonNavbar = () => {
   const {
     carrito,
     stateCarrito,
-    setStateCarrito,
+    cerrarCarrito,
     eliminarDelCarrito,
     aumentarCantidad,
     disminuirCantidad,
     calcularTotal,
+    vaciarCarrito,
   } = useCarritoStore();
-  const total = carrito.reduce(
-    (sum, item) => sum + item.precio_unidad * item.cantidad,
-    0
-  );
-  const handleWhatsAppCheckout = () => {
-    const message = carrito
-      .map(
-        (item) =>
-          `- ${item.nombre} x${item.cantidad} - $${(
-            item.precio_unidad * item.cantidad
-          ).toFixed(2)}`
-      )
-      .join("%0A");
 
-    const totalMessage = `Total: $${total.toFixed(2)}`;
-    const fullMessage = `Hola, me gustaría comprar:%0A${message}%0A%0A${totalMessage}`;
+  const total = calcularTotal();
+
+  const handleWhatsAppCheckout = () => {
+    if (carrito.length === 0) return;
+
+    const message = carrito
+      .map((item) => {
+        const precio = Number(item.precio_unidad) || 0;
+        const cantidad = Number(item.cantidad) || 0;
+        const subtotal = precio * cantidad;
+
+        return `• ${item.nombre}%0A  Cantidad: ${cantidad}%0A  Precio: S/${precio.toFixed(
+          2
+        )}%0A  Subtotal: S/${subtotal.toFixed(2)}`;
+      })
+      .join("%0A%0A");
+
+    const totalMessage = `*TOTAL: S/${total.toFixed(2)}*`;
+    const header = `*🛒 NUEVO PEDIDO*%0A%0A`;
+    const fullMessage = `${header}${message}%0A%0A${totalMessage}`;
 
     window.open(
       `https://wa.me/${WHATSAPP_NUMBER}?text=${fullMessage}`,
       "_blank"
     );
+
+    // Opcional: Vaciar carrito después de enviar
+    // vaciarCarrito();
+    // cerrarCarrito();
   };
 
   return (
-    <div
-      className={`fixed top-0 right-0 ${
-        stateCarrito ? "-translate-x-0" : "translate-x-full"
-      }  w-full max-w-80 bg-white border-l border-l-neutral-300 text-black z-80 h-screen transition-transform duration-300 flex flex-col`}
-    >
-      <div className="flex items-center justify-between py-5 border-b border-b-neutral-300 px-4">
-        <h1 className="font-semibold text-2xl">Tu carrito</h1>
-        <button
-          onClick={setStateCarrito}
-          className="p-2 rounded-full h-10 w-10 hover:bg-black hover:text-white flex items-center justify-center text-black transition-all duration-300"
-        >
-          <Icon icon="ic:sharp-close" width="24" height="24" />
-        </button>
-      </div>
+    <>
+      {/* Overlay oscuro */}
+      {stateCarrito && (
+        <div
+          className="fixed inset-0 bg-transparent bg-opacity-50 z-40 transition-opacity duration-300"
+          onClick={cerrarCarrito}
+        />
+      )}
 
-      <ul className="p-2 flex flex-col gap-1 flex-1 overflow-y-auto">
-        {carrito.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-neutral-400">
-            <Icon icon="mdi:cart-outline" width="64" height="64" />
-            <p className="mt-2">Tu carrito está vacío</p>
-          </div>
-        ) : (
-          carrito.map((item) => (
-            <li
-              key={item.id}
-              className="h-20 w-full flex gap-2 items-center px-2 rounded-lg bg-neutral-100"
-            >
-              <img
-                src={item.imagen}
-                alt={item.nombre}
-                className="w-15 h-15 rounded-lg"
-              />
-              <div className="flex-1">
-                <h1 className="font-medium text-sm">{item.nombre}</h1>
-                <p className="text-xs text-neutral-500 font-medium">
-                  ${item.precio_unidad}
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <button
-                    onClick={() => disminuirCantidad(item.id)}
-                    className="w-5 h-5 flex items-center justify-center bg-neutral-200 rounded hover:bg-neutral-300 transition-colors"
-                  >
-                    <Icon icon="ic:round-minus" width="14" height="14" />
-                  </button>
-                  <span className="text-sm font-medium min-w-[20px] text-center">
-                    {item.cantidad}
-                  </span>
-                  <button
-                    onClick={() => aumentarCantidad(item.id)}
-                    className="w-5 h-5 flex items-center justify-center bg-neutral-200 rounded hover:bg-neutral-300 transition-colors"
-                  >
-                    <Icon icon="ic:round-plus" width="14" height="14" />
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={() => eliminarDelCarrito(item.id)}
-                className="ml-auto hover:scale-110 transition-transform"
-              >
-                <Icon
-                  icon="cil:trash"
-                  width="17"
-                  height="17"
-                  className="text-red-500"
-                />
-              </button>
-            </li>
-          ))
-        )}
-      </ul>
-
-      {/* Sección del Total */}
-      {carrito.length > 0 && (
-        <div className="border-t border-neutral-300 p-4 bg-neutral-50">
-          <div className="flex justify-between items-center mb-3">
-            <span className="text-lg font-semibold">Total:</span>
-            <span className="text-2xl font-bold">
-              ${calcularTotal().toFixed(2)}
-            </span>
+      {/* Sidebar del carrito */}
+      <div
+        className={`fixed top-0 right-0 ${
+          stateCarrito ? "translate-x-0" : "translate-x-full"
+        } w-full max-w-md bg-white text-black z-50 h-screen transition-transform duration-300 flex flex-col shadow-2xl`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between py-4 px-5 border-b border-neutral-200 bg-neutral-50">
+          <div>
+            <h1 className="font-bold text-2xl">Tu Carrito</h1>
+            <p className="text-sm text-neutral-500">
+              {carrito.length} {carrito.length === 1 ? "producto" : "productos"}
+            </p>
           </div>
           <button
-            className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-neutral-800 transition-all duration-300 transform hover:scale-105 active:scale-95"
-            onClick={handleWhatsAppCheckout}
+            onClick={cerrarCarrito}
+            className="p-2 rounded-full h-10 w-10 hover:bg-neutral-200 flex items-center justify-center transition-all duration-200"
           >
-            Proceder al pago
+            <Icon icon="ic:sharp-close" width="24" height="24" />
           </button>
         </div>
-      )}
-    </div>
+
+        {/* Lista de productos */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {carrito.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-neutral-400">
+              <Icon icon="mdi:cart-outline" width="80" height="80" />
+              <p className="mt-4 text-lg font-medium">Tu carrito está vacío</p>
+              <p className="text-sm mt-1">¡Agrega productos para comenzar!</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {carrito.map((item) => {
+                const precio = Number(item.precio_unidad) || 0;
+                const cantidad = Number(item.cantidad) || 0;
+                const subtotal = precio * cantidad;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="flex gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:shadow-md transition-shadow"
+                  >
+                    {/* Imagen del producto */}
+                    <img
+                      src={item.imagen}
+                      alt={item.nombre}
+                      className="w-20 h-20 object-cover rounded-lg border border-neutral-200"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/80";
+                      }}
+                    />
+
+                    {/* Info del producto */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-semibold text-sm line-clamp-2">
+                          {item.nombre}
+                        </h3>
+                        <p className="text-xs text-neutral-500 mt-1">
+                          S/{precio.toFixed(2)} c/u
+                        </p>
+                      </div>
+
+                      {/* Controles de cantidad */}
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="flex items-center gap-2 bg-white rounded-lg border border-neutral-300 px-2 py-1">
+                          <button
+                            onClick={() => disminuirCantidad(item.id)}
+                            className="w-6 h-6 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
+                          >
+                            <Icon icon="ic:round-minus" width="16" height="16" />
+                          </button>
+                          <span className="text-sm font-semibold min-w-[24px] text-center">
+                            {cantidad}
+                          </span>
+                          <button
+                            onClick={() => aumentarCantidad(item.id)}
+                            className="w-6 h-6 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
+                          >
+                            <Icon icon="ic:round-plus" width="16" height="16" />
+                          </button>
+                        </div>
+
+                        <span className="font-bold text-sm">
+                          S/{subtotal.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Botón eliminar */}
+                    <button
+                      onClick={() => eliminarDelCarrito(item.id)}
+                      className="self-start p-2 hover:bg-red-50 rounded-lg transition-colors group"
+                    >
+                      <Icon
+                        icon="solar:trash-bin-trash-bold"
+                        width="20"
+                        height="20"
+                        className="text-neutral-400 group-hover:text-red-500 transition-colors"
+                      />
+                    </button>
+                  </div>
+                );
+              })}
+
+              {/* Botón vaciar carrito */}
+              {carrito.length > 0 && (
+                <button
+                  onClick={vaciarCarrito}
+                  className="w-full py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                >
+                  Vaciar carrito
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer con total y botón de checkout */}
+        {carrito.length > 0 && (
+          <div className="border-t border-neutral-200 bg-neutral-50 p-5">
+            {/* Resumen del total */}
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-600">Subtotal</span>
+                <span className="font-medium">S/{total.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-neutral-600">Envío</span>
+                <span className="font-medium text-green-600">A calcular</span>
+              </div>
+              <div className="h-px bg-neutral-200 my-2" />
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold">Total</span>
+                <span className="text-2xl font-bold text-black">
+                  S/{total.toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            {/* Botón de WhatsApp */}
+            <button
+              onClick={handleWhatsAppCheckout}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              <Icon icon="ic:baseline-whatsapp" width="24" height="24" />
+              Comprar por WhatsApp
+            </button>
+
+            <p className="text-xs text-center text-neutral-500 mt-3">
+              Serás redirigido a WhatsApp para finalizar tu pedido
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
