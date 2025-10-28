@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useCarritoStore } from "../stores/CarritoStore";
 import { useCalcularTotal } from "../hooks/useCalcularTotal";
 
-const WHATSAPP_NUMBER = "51906047287";
+const WHATSAPP_NUMBER = "51123456789";
 
 export const CarritonNavbar = () => {
   const {
