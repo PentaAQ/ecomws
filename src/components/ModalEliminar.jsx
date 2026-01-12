@@ -16,9 +16,9 @@ export const ModalEliminar = () => {
         onClick={setActiveModalEliminar}
       ></div>
 
-      <div className="bg-white relative w-full max-w-md rounded-2xl shadow-2xl overflow-hidden max-h-[99%] flex flex-col gap-6 p-8 items-center animate-in zoom-in-95 duration-300">
-        <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
-          <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="bg-white relative w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[99%] flex flex-col gap-6 p-8 items-center animate-in zoom-in-95 duration-300 border border-neutral-200">
+        <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center border border-neutral-200">
+          <svg className="w-8 h-8 text-neutral-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -30,21 +30,22 @@ export const ModalEliminar = () => {
         </div>
 
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-black mb-2">¿Eliminar producto?</h1>
-          <p className="text-gray-600 text-sm">
+          <p className="text-xs font-semibold tracking-[0.18em] text-neutral-500 uppercase">Confirmación</p>
+          <h1 className="mt-2 text-2xl font-semibold text-neutral-900 mb-2">¿Eliminar producto?</h1>
+          <p className="text-neutral-600 text-sm">
             Esta acción no se puede deshacer. El producto será eliminado permanentemente.
           </p>
         </div>
 
         <div className="flex gap-3 w-full pt-4">
           <button
-            className="flex-1 bg-gray-100 hover:bg-gray-200 text-black font-medium px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+            className="flex-1 bg-white hover:bg-neutral-50 text-neutral-900 font-semibold px-4 py-3 rounded-xl border border-neutral-200 transition-colors duration-200 active:scale-[0.99]"
             onClick={setActiveModalEliminar}
           >
             Cancelar
           </button>
           <button
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            className="flex-1 bg-neutral-900 hover:bg-neutral-800 text-white font-semibold px-4 py-3 rounded-xl transition-colors duration-200 active:scale-[0.99] shadow-sm"
             onClick={() => {
               eliminarProducto(itemSelect.id), setActiveModalEliminar()
             }}

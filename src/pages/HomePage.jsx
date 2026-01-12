@@ -6,7 +6,7 @@ import { useCarritoStore } from "../stores/CarritoStore";
 
 export const HomePage = () => {
   return (
-    <main className="h-screen text-black font-family-sans ">
+    <main className="min-h-screen bg-neutral-50 text-neutral-900 font-family-sans">
       <HeaderHome />
       <CarritonNavbar />
       <HeroHome />

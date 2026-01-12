@@ -19,7 +19,7 @@ export const FormProducts = () => {
   } = useFormProducts()
 
   const inputClass =
-    "w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-all duration-200 text-gray-900 placeholder-gray-400"
+    "w-full px-4 py-2.5 border border-neutral-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-neutral-900/10 focus:border-neutral-300 disabled:bg-neutral-100 disabled:cursor-not-allowed transition-colors duration-200 text-neutral-900 placeholder-neutral-400 shadow-sm"
 
   return (
     <div className="fixed z-50 flex items-center justify-center inset-0">
@@ -30,11 +30,12 @@ export const FormProducts = () => {
       />
 
       {/* Modal */}
-      <section className="bg-white relative w-full max-w-3xl rounded-2xl shadow-2xl overflow-y-auto max-h-[99%] border border-gray-100">
+      <section className="bg-white relative w-full max-w-3xl rounded-3xl shadow-2xl overflow-y-auto max-h-[99%] border border-neutral-200">
         {/* Header */}
-        <div className="bg-black px-6 py-5">
-          <h1 className="text-2xl font-bold text-white tracking-tight">{accion} Zapatillas</h1>
-          <p className="text-gray-400 text-sm mt-1">Completa los detalles de tu producto</p>
+        <div className="px-6 py-5 border-b border-neutral-200 bg-white">
+          <p className="text-xs font-semibold tracking-[0.18em] text-neutral-500 uppercase">Producto</p>
+          <h1 className="mt-2 text-2xl font-semibold text-neutral-900 tracking-tight">{accion} Zapatillas</h1>
+          <p className="text-neutral-600 text-sm mt-1">Completa los detalles de tu producto</p>
         </div>
 
         {/* Formulario */}
@@ -43,7 +44,7 @@ export const FormProducts = () => {
           <div className="space-y-5">
             {/* Nombre */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="font-semibold text-sm text-gray-900">
+              <label htmlFor="name" className="font-semibold text-sm text-neutral-900">
                 Nombre <span className="text-red-500">*</span>
               </label>
               <input
@@ -61,7 +62,7 @@ export const FormProducts = () => {
 
             {/* Precio */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="precio" className="font-semibold text-sm text-gray-900">
+              <label htmlFor="precio" className="font-semibold text-sm text-neutral-900">
                 Precio <span className="text-red-500">*</span>
               </label>
               <input
@@ -81,7 +82,7 @@ export const FormProducts = () => {
 
             {/* Descripción */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="descripcion" className="font-semibold text-sm text-gray-900">
+              <label htmlFor="descripcion" className="font-semibold text-sm text-neutral-900">
                 Descripción <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -99,7 +100,7 @@ export const FormProducts = () => {
 
             {/* Categoría */}
             <div className="flex flex-col gap-2">
-              <label htmlFor="categoria" className="font-semibold text-sm text-gray-900">
+              <label htmlFor="categoria" className="font-semibold text-sm text-neutral-900">
                 Marca <span className="text-red-500">*</span>
               </label>
               <select
@@ -123,7 +124,7 @@ export const FormProducts = () => {
 
           {/* Columna Derecha - Imagen */}
           <div className="flex flex-col gap-3">
-            <label className="font-semibold text-sm text-gray-900">
+            <label className="font-semibold text-sm text-neutral-900">
               Imagen {!isEditMode && <span className="text-red-500">*</span>}
             </label>
 
@@ -131,8 +132,8 @@ export const FormProducts = () => {
               htmlFor="imagen"
               className={`relative flex items-center justify-center border-2 border-dashed rounded-xl py-8 cursor-pointer transition-all duration-300 ${
                 isLoading
-                  ? "bg-gray-50 border-gray-200 cursor-not-allowed opacity-50"
-                  : "border-gray-300 bg-gray-50 hover:bg-black hover:border-black hover:text-white group"
+                  ? "bg-neutral-50 border-neutral-200 cursor-not-allowed opacity-50"
+                  : "border-neutral-300 bg-neutral-50 hover:bg-neutral-900 hover:border-neutral-900 hover:text-white group"
               }`}
             >
               <div className="text-center">
@@ -154,10 +155,10 @@ export const FormProducts = () => {
                 <img
                   src={imagenPreview || "/placeholder.svg"}
                   alt="Preview"
-                  className="w-full h-64 object-contain rounded-xl border border-gray-200 bg-gray-50 transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-64 object-contain rounded-2xl border border-neutral-200 bg-neutral-50 transition-transform duration-300 group-hover:scale-[1.02]"
                 />
                 {isEditMode && (
-                  <span className="absolute top-3 right-3 bg-black text-white text-xs px-3 py-1 rounded-full shadow-lg font-medium">
+                  <span className="absolute top-3 right-3 bg-neutral-900 text-white text-xs px-3 py-1 rounded-full shadow-sm font-medium">
                     {imagenFile ? "Nueva" : "Actual"}
                   </span>
                 )}
@@ -175,7 +176,7 @@ export const FormProducts = () => {
             />
 
             {isEditMode && (
-              <p className="text-xs text-gray-500 text-center italic">Deja vacío para mantener la imagen actual</p>
+              <p className="text-xs text-neutral-500 text-center italic">Deja vacío para mantener la imagen actual</p>
             )}
           </div>
 
@@ -185,14 +186,14 @@ export const FormProducts = () => {
               type="button"
               onClick={handleCloseModal}
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="flex-1 px-4 py-3 bg-white text-neutral-900 font-semibold rounded-xl border border-neutral-200 hover:bg-neutral-50 transition-colors duration-200 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="flex-1 px-4 py-3 bg-neutral-900 text-white font-semibold rounded-xl hover:bg-neutral-800 transition-colors duration-200 active:scale-[0.99] shadow-sm disabled:bg-neutral-400 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">

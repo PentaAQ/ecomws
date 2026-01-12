@@ -43,7 +43,6 @@ export const CarritonNavbar = () => {
 
   return (
     <>
-      {/* Overlay oscuro */}
       {stateCarrito && (
         <div
           className="fixed inset-0 backdrop-blur-sm bg-opacity-50 z-40 transition-opacity duration-300"
@@ -51,7 +50,6 @@ export const CarritonNavbar = () => {
         />
       )}
 
-      {/* Sidebar del carrito */}
       <div
         className={`fixed top-0 right-0 ${
           stateCarrito ? "translate-x-0" : "translate-x-full"
@@ -103,7 +101,7 @@ export const CarritonNavbar = () => {
                           {item.nombre}
                         </h3>
                         <p className="text-xs text-neutral-500 mt-1">
-                          S/{item.precio_unidad} c/u
+                          S/{item.precio_unidad}
                         </p>
                       </div>
 
@@ -114,7 +112,7 @@ export const CarritonNavbar = () => {
                             className="text-sm font-semibold min-w-[24px] text-center cursor-pointer bg-gray-300 hover:bg-gray-200 py-1 px-2"
                             onClick={() => disminuirCantidad(item.id)}
                           >
-                            -1
+                            -
                           </span>
                           <span className="text-sm font-semibold min-w-[24px] text-center">
                             {item.cantidad}
@@ -123,12 +121,12 @@ export const CarritonNavbar = () => {
                             className="text-sm font-semibold min-w-[24px] text-center cursor-pointer bg-gray-300 hover:bg-gray-200 py-1 px-2"
                             onClick={() => aumentarCantidad(item.id)}
                           >
-                            +1
+                            +
                           </span>
                         </div>
-                        <span className="text-sm font-semibold min-w-[24px] text-center flex gap-2">
-                          <p>SubTotal:</p>
-                          {item.subTotal.toFixed(2)}
+                        <span className="text-sm font-semibold min-w-[24px] text-center flex gap-2 text-neutral-500">
+                          
+                          S/ {item.subTotal.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -166,7 +164,7 @@ export const CarritonNavbar = () => {
         {carrito.length > 0 && (
           <div className="border-t border-neutral-200 bg-neutral-50 p-5">
             <div className="space-y-2 mb-4">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pr-10">
                 <span className="text-2xl font-bold">Total: </span>
                 <span className="text-2xl font-bold text-black">
                   S/{totalAPagar.toFixed(2)}

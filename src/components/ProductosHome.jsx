@@ -10,23 +10,23 @@ import { Icon } from "@iconify/react";
 import { BuscadorProductos } from "./BuscadorProductos"; // 👈 Importar el buscador
 
 export const ProductosHome = () => {
-  // 👇 Obtener el buscador del store
+  //  Obtener el buscador del store
   const { buscador } = useProductosStore();
   
-  // 👇 Obtener todos los productos y los productos buscados
+  //  Obtener todos los productos y los productos buscados
   const { data: todosLosProductos } = useMostrarProductosQuery();
   const { data: productosBuscados } = useBuscarProductoQQuery();
   
   const { agregarAlCarrito } = useCarritoStore();
 
-  // 👇 Usar productos buscados si hay búsqueda, sino todos los productos
+  //  Usar productos buscados si hay búsqueda, sino todos los productos
   const productos = buscador.trim() ? productosBuscados : todosLosProductos;
 
   // Estado para la paginación
   const [paginaActual, setPaginaActual] = useState(1);
   const productosPorPagina = 9;
 
-  // 👇 Resetear página cuando cambia el buscador
+  //  Resetear página cuando cambia el buscador
   useMemo(() => {
     setPaginaActual(1);
   }, [buscador]);
@@ -98,29 +98,37 @@ export const ProductosHome = () => {
 
   return (
     <section
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 min-h-screen"
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
       id="productos"
     >
       {/* Título */}
-      <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-black">
-        Nuestros Productos
-      </h1>
+      <div className="text-center mb-10">
+        <p className="text-xs sm:text-sm font-semibold tracking-[0.18em] text-neutral-500 uppercase">
+          Catálogo
+        </p>
+        <h1 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">
+          Nuestros productos
+        </h1>
+        <p className="mt-3 text-sm sm:text-base text-neutral-600 max-w-2xl mx-auto">
+          Busca por nombre y agrega al carrito en segundos.
+        </p>
+      </div>
 
-      {/* 👇 Buscador */}
+      {/* Buscador */}
       <BuscadorProductos />
 
-      {/* 👇 Mensaje si no hay resultados */}
+      {/* Mensaje si no hay resultados */}
       {productos && productos.length === 0 && (
         <div className="text-center py-12">
           <Icon 
             icon="material-symbols:search-off" 
-            className="w-16 h-16 mx-auto text-gray-300 mb-4" 
+            className="w-16 h-16 mx-auto text-neutral-300 mb-4" 
           />
-          <p className="text-gray-500 text-lg mb-2">
+          <p className="text-neutral-600 text-lg mb-2">
             No se encontraron productos
           </p>
           {buscador && (
-            <p className="text-gray-400">
+            <p className="text-neutral-500">
               No hay resultados para "{buscador}"
             </p>
           )}
@@ -130,38 +138,38 @@ export const ProductosHome = () => {
       {/* Grid de productos */}
       {productos && productos.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 mb-12">
             {productosPaginados.map((item) => {
               return (
                 <div
                   key={item.id} // 👈 Cambiado de item.nombre a item.id
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 h-110 max-sm:h-100 hover:-translate-y-1 flex flex-col"
+                  className="bg-white rounded-2xl border border-neutral-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group hover:-translate-y-0.5 flex flex-col"
                 >
-                  <div className="relative h-48 sm:h-56 bg-gray-50 overflow-hidden flex items-center justify-center">
+                  <div className="relative h-48 sm:h-56 bg-neutral-50 overflow-hidden flex items-center justify-center">
                     <img
                       src={item.imagen || "/placeholder.svg"}
                       width={200}
                       height={100}
-                      className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500 ease-out"
+                      className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-500 ease-out"
                       alt={item.nombre}
                     />
                   </div>
 
                   <div className="p-4 sm:p-5 flex flex-col gap-3 flex-1">
-                    <h1 className="text-base sm:text-lg font-semibold text-black line-clamp-2 group-hover:text-gray-800 transition-colors">
+                    <h1 className="text-base sm:text-lg font-semibold text-neutral-900 line-clamp-2">
                       {item.nombre}
                     </h1>
 
-                    <p className="text-sm text-gray-600 line-clamp-2 inline-block w-full truncate align-top">
+                    <p className="text-sm text-neutral-600 line-clamp-2 inline-block w-full truncate align-top">
                       {item.descripcion}
                     </p>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
-                      <p className="font-bold text-lg sm:text-xl text-black">
+                    <div className="flex items-center justify-between pt-3 border-t border-neutral-200 mt-auto">
+                      <p className="font-semibold text-lg sm:text-xl text-neutral-900">
                         S/{Number(item.precio_unidad).toFixed(2)}
                       </p>
                       <button
-                        className={`text-white w-fit px-2 py-3 cursor-pointer transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg font-semibold flex gap-2 rounded-lg bg-black hover:bg-gray-800`}
+                        className={`inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-neutral-900 text-white font-semibold shadow-sm hover:bg-neutral-800 transition-colors active:scale-[0.99]`}
                         onClick={() => agregarAlCarrito(item)}
                       >
                         <Icon icon="uil:cart" width="24" height="24" />
@@ -177,7 +185,7 @@ export const ProductosHome = () => {
           {/* Controles de paginación */}
           {totalPaginas > 1 && (
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-neutral-600">
                 Página {paginaActual} de {totalPaginas} ({productos.length}{" "}
                 {buscador ? "resultados" : "productos"})
               </p>
@@ -186,7 +194,7 @@ export const ProductosHome = () => {
                 <button
                   onClick={paginaAnterior}
                   disabled={paginaActual === 1}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="p-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   aria-label="Página anterior"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -207,8 +215,8 @@ export const ProductosHome = () => {
                         onClick={() => irAPagina(numero)}
                         className={`px-3 py-2 rounded-lg font-medium transition-all ${
                           paginaActual === numero
-                            ? "bg-black text-white"
-                            : "border border-gray-300 hover:bg-gray-100 text-gray-700"
+                            ? "bg-neutral-900 text-white"
+                            : "border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700"
                         }`}
                       >
                         {numero}
@@ -220,7 +228,7 @@ export const ProductosHome = () => {
                 <button
                   onClick={paginaSiguiente}
                   disabled={paginaActual === totalPaginas}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="p-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   aria-label="Página siguiente"
                 >
                   <ChevronRight className="w-5 h-5" />

@@ -9,10 +9,10 @@ import { FiltrosAdmin } from "../components/FiltrosAdmin";
 export const AdminPage = () => {
   const { activeModalForm, activeModalEliminar } = useModalStore();
   return (
-    <main className="flex flex-col bg-white h-screen overflow-hidden font-family-sans">
+    <main className="flex flex-col min-h-screen bg-neutral-50 text-neutral-900 font-family-sans">
       <HeaderAdmin />
       <Toaster position="bottom-center" />
-      <section className="grid max-md:grid-cols-1 md:grid-cols-3 max-h-screen gap-6 p-6">
+      <section className="w-full max-w-7xl mx-auto grid max-md:grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 py-6">
         <ProductsCardsAdmin />
         <FiltrosAdmin />
       </section>

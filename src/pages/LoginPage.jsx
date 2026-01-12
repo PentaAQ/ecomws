@@ -32,7 +32,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-8">
+    <section className="w-full min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-neutral-50 to-neutral-100 px-4 py-10">
       <Toaster 
         position="top-right"
         richColors
@@ -43,19 +43,22 @@ export const LoginPage = () => {
       
       <div className="w-full max-w-md">
         {/* Header elegante */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-900 mb-6">
-            <Icon icon="lucide-lab:sneaker" width="24" height="24" className="text-white text-xl" />
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-neutral-900 text-white mb-5 shadow-sm">
+            <Icon icon="lucide-lab:sneaker" width="22" height="22" className="text-white" />
           </div>
-          <h1 className="text-4xl font-light tracking-tight text-slate-900 mb-2">Bienvenido</h1>
-          <p className="text-sm text-slate-500 font-medium">Accede a tu cuenta para continuar</p>
+          <p className="text-xs font-semibold tracking-[0.18em] text-neutral-500 uppercase">Acceso</p>
+          <h1 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">Bienvenido</h1>
+          <p className="mt-2 text-sm text-neutral-600">Accede a tu cuenta para continuar</p>
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="bg-white border border-neutral-200 rounded-3xl shadow-sm p-6 sm:p-7">
+
+          {/* Formulario */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Email Input */}
           <div className="group">
-            <label className="block text-xs font-semibold text-slate-700 mb-2 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-neutral-700 mb-2 uppercase tracking-wide">
               Correo electrónico
             </label>
             <input
@@ -73,10 +76,10 @@ export const LoginPage = () => {
               placeholder="tu@email.com"
               type="email"
               autoComplete="email"
-              className={`w-full px-4 py-3 bg-white border rounded-lg text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent hover:border-slate-300 ${
+              className={`w-full px-4 py-3 bg-white border rounded-xl text-neutral-900 placeholder-neutral-400 shadow-sm transition-colors focus:outline-none focus:ring-4 focus:ring-neutral-900/10 hover:border-neutral-300 ${
                 errors.email 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-slate-200 focus:ring-slate-900'
+                  ? 'border-red-400 focus:ring-red-500/20' 
+                  : 'border-neutral-200 focus:ring-neutral-900/10'
               }`}
             />
             {errors.email && (
@@ -89,7 +92,7 @@ export const LoginPage = () => {
 
           {/* Password Input */}
           <div className="group">
-            <label className="block text-xs font-semibold text-slate-700 mb-2 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-neutral-700 mb-2 uppercase tracking-wide">
               Contraseña
             </label>
             <div className="relative">
@@ -108,16 +111,16 @@ export const LoginPage = () => {
                 placeholder="••••••••"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                className={`w-full px-4 py-3 bg-white border rounded-lg text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent hover:border-slate-300 ${
+                className={`w-full px-4 py-3 bg-white border rounded-xl text-neutral-900 placeholder-neutral-400 shadow-sm transition-colors focus:outline-none focus:ring-4 focus:ring-neutral-900/10 hover:border-neutral-300 ${
                   errors.password 
-                    ? 'border-red-400 focus:ring-red-500' 
-                    : 'border-slate-200 focus:ring-slate-900'
+                    ? 'border-red-400 focus:ring-red-500/20' 
+                    : 'border-neutral-200 focus:ring-neutral-900/10'
                 }`}
               />
               <button
                 type="button"
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                className="absolute top-1/2 -translate-y-1/2 right-4 text-slate-400 hover:text-slate-600 transition-colors duration-200 cursor-pointer"
+                className="absolute top-1/2 -translate-y-1/2 right-4 text-neutral-400 hover:text-neutral-600 transition-colors duration-200 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 <Icon icon={showPassword ? "mdi:eye-off" : "mdi:eye"} className="text-lg" />
@@ -135,7 +138,7 @@ export const LoginPage = () => {
           <button
             type="submit"
             disabled={isPending || isSubmitting}
-            className="w-full mt-8 bg-slate-900 text-white font-semibold py-3 rounded-lg hover:bg-slate-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transform shadow-sm hover:shadow-md"
+            className="w-full mt-6 bg-neutral-900 text-white font-semibold py-3 rounded-xl hover:bg-neutral-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] shadow-sm"
           >
             {isPending || isSubmitting ? (
               <span className="flex items-center justify-center gap-2">
@@ -146,11 +149,12 @@ export const LoginPage = () => {
               "INICIAR SESIÓN"
             )}
           </button>
-        </form>
+          </form>
 
-        {/* Footer */}
-        <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-          <p className="text-xs text-slate-500">Modo invitado • Acceso de demostración</p>
+          {/* Footer */}
+          <div className="mt-7 pt-6 border-t border-neutral-200 text-center">
+            <p className="text-xs text-neutral-500">Modo invitado • Acceso de demostración</p>
+          </div>
         </div>
       </div>
     </section>
